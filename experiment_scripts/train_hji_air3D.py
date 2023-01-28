@@ -29,7 +29,7 @@ p.add_argument('--num_epochs', type=int, default=100000,
                help='Number of epochs to train for.')
 
 p.add_argument('--epochs_til_ckpt', type=int, default=1000,
-               help='Time interval in seconds until checkpoint is saved.')
+               help='Time interval in epochs until checkpoint is saved.')
 p.add_argument('--steps_til_summary', type=int, default=100,
                help='Time interval in seconds until tensorboard summary is saved.')
 p.add_argument('--model', type=str, default='sine', required=False, choices=['sine', 'tanh', 'sigmoid', 'relu'],
@@ -84,7 +84,7 @@ model.cuda()
 
 # Define the loss
 loss_fn = loss_functions.initialize_hji_air3D(dataset, opt.minWith)
-
+ 
 root_path = os.path.join(opt.logging_root, opt.experiment_name)
 
 def val_fn(model, ckpt_dir, epoch):

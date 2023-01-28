@@ -29,8 +29,8 @@ thetas = [1.5863] # This theta is contained in the LS computation grid.
 # Initialize and load the model
 model = modules.SingleBVPNet(in_features=4, out_features=1, type=activation, mode='mlp',
                              final_layer_factor=1., hidden_features=512, num_hidden_layers=3)
-model.cuda()
-checkpoint = torch.load(ckpt_path)
+model.cpu()
+checkpoint = torch.load(ckpt_path, map_location=torch.device('cpu'))
 try:
   model_weights = checkpoint['model']
 except:
@@ -72,7 +72,7 @@ def val_fn_BRS(model):
       coords = torch.cat((time_coords, state_coords), dim=1)[None] 
       
       # Compute the value function
-      model_in = {'coords': coords.cuda()}
+      model_in = {'coords': coords.cpu()}
       model_out = model(model_in)
 
       # Detatch outputs and reshape
