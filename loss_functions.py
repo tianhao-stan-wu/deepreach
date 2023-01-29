@@ -136,6 +136,7 @@ def initialize_hji_2DExample(dataset, minWith):
         batch_size = x.shape[1]
 
         du, status = diff_operators.jacobian(y, x)
+        print(du.shape)
         dudt = du[..., 0, 0]
         dudx = du[..., 0, 1:]
 
@@ -144,6 +145,7 @@ def initialize_hji_2DExample(dataset, minWith):
         # \dot y    = v_y
 
         # Compute the hamiltonian
+        print(dudt.shape)
         print(dudx.shape)
         ham = (-0.5) * torch.norm(dudx[..., 0:2], dim=3, keepdim=True)
 
