@@ -144,8 +144,7 @@ def initialize_hji_2DExample(dataset, minWith):
         # \dot y    = v_y
 
         # Compute the hamiltonian
-        norm_dim = dudx.size()[-1]
-        ham = (-0.5) * torch.norm(dudx[..., 0:2], dim=norm_dim, keepdim=True)
+        ham = (-0.5) * torch.norm(dudx[..., 0:2], dim=3, keepdim=True)
 
         # If we are computing BRT then take min with zero
         if minWith == 'zero':
