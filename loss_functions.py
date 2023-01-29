@@ -131,9 +131,12 @@ def initialize_hji_2DExample(dataset, minWith):
     def hji_2DExample(model_output, gt):
         source_boundary_values = gt['source_boundary_values']
         x = model_output['model_in']  # (meta_batch_size, num_points, 3)
+        print(x.shape)
         y = model_output['model_out']  # (meta_batch_size, num_points, 1)
+        print(y.shape)
         dirichlet_mask = gt['dirichlet_mask']
         batch_size = x.shape[1]
+        print(batch_size)
 
         du, status = diff_operators.jacobian(y, x)
         print(du.shape)
