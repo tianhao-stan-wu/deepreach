@@ -131,15 +131,15 @@ def initialize_hji_2DExample(dataset, minWith):
     def hji_2DExample(model_output, gt):
         source_boundary_values = gt['source_boundary_values']
         x = model_output['model_in']  # (meta_batch_size, num_points, 3)
-        print(x.shape)
+        # print(x.shape)
         y = model_output['model_out']  # (meta_batch_size, num_points, 1)
-        print(y.shape)
+        # print(y.shape)
         dirichlet_mask = gt['dirichlet_mask']
         batch_size = x.shape[1]
-        print(batch_size)
+        # print(batch_size)
 
         du, status = diff_operators.jacobian(y, x)
-        print(du.shape)
+        # print(du.shape)
         dudt = du[..., 0, 0]
         dudx = du[..., 0, 1:]
 
@@ -148,9 +148,9 @@ def initialize_hji_2DExample(dataset, minWith):
         # \dot y    = v_y
 
         # Compute the hamiltonian
-        print(dudt.shape)
-        print(dudx.shape)
-        ham = (-0.5) * torch.norm(dudx[..., 0:2], dim=3, keepdim=True)
+        # print(dudt.shape)
+        # print(dudx.shape)
+        ham = (-0.5) * torch.sqrt(torch.square(dudx[...,0])+torch.square(dudx[..., 1]))
 
         # If we are computing BRT then take min with zero
         if minWith == 'zero':
