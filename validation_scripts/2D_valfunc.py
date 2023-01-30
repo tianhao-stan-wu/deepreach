@@ -39,7 +39,7 @@ num_times = len(times)
 fig = plt.figure(figsize=(5*num_times, 5))
 
 # Get the meshgrid in the (x, y) coordinate
-sidelen = 400
+sidelen = 200
 mgrid_coords = dataio.get_mgrid(sidelen)
 
 # Start plotting the results
