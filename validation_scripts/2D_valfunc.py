@@ -32,7 +32,7 @@ model.eval()
 
 
 # Time values at which the function needs to be plotted
-times = [0.]
+times = [0., 0.5, 1.0]
 num_times = len(times)
 
 # Create a figure
