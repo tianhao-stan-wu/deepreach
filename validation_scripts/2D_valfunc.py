@@ -41,6 +41,7 @@ fig = plt.figure(figsize=(5*num_times, 5))
 # Get the meshgrid in the (x, y) coordinate
 sidelen = 200
 mgrid_coords = dataio.get_mgrid(sidelen)
+mgrid_coords *= 2
 
 # Start plotting the results
 for i in range(num_times):
