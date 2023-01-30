@@ -39,7 +39,7 @@ num_times = len(times)
 fig = plt.figure(figsize=(5*num_times, 5))
 
 # Get the meshgrid in the (x, y) coordinate
-sidelen = 200
+sidelen = 400
 mgrid_coords = dataio.get_mgrid(sidelen)
 
 # Start plotting the results
@@ -58,7 +58,7 @@ for i in range(num_times):
   model_out = (model_out <= 0.001)*1.
 
   # Plot the actual data
-  ax = fig.add_subplot(num_times, 1, 1 + i)
+  ax = fig.add_subplot(1, num_times, 1 + i)
   ax.set_title('t = %0.2f' % times[i])
   s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-1., 1., -1., 1.))
   fig.colorbar(s) 
