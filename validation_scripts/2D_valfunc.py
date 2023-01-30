@@ -64,4 +64,4 @@ for i in range(num_times):
   s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-2., 2., -2., 2.))
   fig.colorbar(s) 
 
-fig.savefig(os.path.join(logging_root, '2D_value_function.png'))
+fig.savefig(os.path.join(logging_root, '2D_value_function_unsafe.png'))
