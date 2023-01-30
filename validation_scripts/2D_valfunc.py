@@ -36,7 +36,7 @@ times = [0., 0.5, 1.0]
 num_times = len(times)
 
 # Create a figure
-fig = plt.figure(figsize=(5*num_times, 5))
+fig = plt.figure(figsize=(10*num_times, 10))
 
 # Get the meshgrid in the (x, y) coordinate
 sidelen = 200
