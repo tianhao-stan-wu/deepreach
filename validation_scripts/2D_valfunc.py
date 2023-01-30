@@ -61,7 +61,7 @@ for i in range(num_times):
   # Plot the actual data
   ax = fig.add_subplot(1, num_times, 1 + i)
   ax.set_title('t = %0.2f' % times[i])
-  s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-1., 1., -1., 1.))
+  s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-2., 2., -2., 2.))
   fig.colorbar(s) 
 
 fig.savefig(os.path.join(logging_root, '2D_value_function.png'))
