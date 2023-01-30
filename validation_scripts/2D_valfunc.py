@@ -36,7 +36,7 @@ times = [0., 0.5, 1.0]
 num_times = len(times)
 
 # Create a figure
-fig = plt.figure(figsize=(10*num_times, 10))
+fig = plt.figure(figsize=(5*num_times, 5))
 
 # Get the meshgrid in the (x, y) coordinate
 sidelen = 200
@@ -60,7 +60,7 @@ for i in range(num_times):
   # Plot the actual data
   ax = fig.add_subplot(1, num_times, 1 + i)
   ax.set_title('t = %0.2f' % times[i])
-  s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-2., 2., -2., 2.))
+  s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-1., 1., -1., 1.))
   fig.colorbar(s) 
 
 fig.savefig(os.path.join(logging_root, '2D_value_function.png'))
