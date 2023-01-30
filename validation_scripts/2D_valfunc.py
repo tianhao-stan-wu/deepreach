@@ -18,7 +18,7 @@ from torch.utils.data import DataLoader
 ckpt_path = './Deepreach_trained_checkpoints/2D_ckpt.pth'
 logging_root = './logs'
 
-model = modules.SingleBVPNet(in_features=3, out_features=1, type=activation, mode='mlp',
+model = modules.SingleBVPNet(in_features=3, out_features=1, type='sine', mode='mlp',
                              final_layer_factor=1., hidden_features=512, num_hidden_layers=3)
 model.cuda()
 checkpoint = torch.load(ckpt_path)
