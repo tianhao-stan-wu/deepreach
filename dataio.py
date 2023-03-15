@@ -234,7 +234,7 @@ class ReachabilityAir3DSource(Dataset):
 
 class Reachability2DExample(Dataset):
     def __init__(self, numpoints, 
-        collisionR=0.75, speed_max=0.5, 
+        collisionR=0.5, speed_max=1, 
         pretrain=True, tMin=0.0, tMax=1.0, counter_start=0, counter_end=100e3, 
         pretrain_iters=2000, angle_alpha=1.0, num_src_samples=1000, seed=0):
         super().__init__()

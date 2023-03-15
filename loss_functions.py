@@ -150,7 +150,7 @@ def initialize_hji_2DExample(dataset, minWith):
         # Compute the hamiltonian
         # print(dudt.shape)
         # print(dudx.shape)
-        ham = (0.5) * torch.sqrt(torch.square(dudx[...,0])+torch.square(dudx[..., 1]))
+        ham = (1) * torch.sqrt(torch.square(dudx[...,0])+torch.square(dudx[..., 1]))
 
         # If we are computing BRT then take min with zero
         if minWith == 'zero':

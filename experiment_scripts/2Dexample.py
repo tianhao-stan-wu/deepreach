@@ -25,7 +25,7 @@ p.add_argument('--experiment_name', type=str, required=True,
 # General training options
 p.add_argument('--batch_size', type=int, default=32)
 p.add_argument('--lr', type=float, default=2e-5, help='learning rate. default=2e-5')
-p.add_argument('--num_epochs', type=int, default=100000,
+p.add_argument('--num_epochs', type=int, default=10000,
                help='Number of epochs to train for.')
 
 p.add_argument('--epochs_til_ckpt', type=int, default=1000,
@@ -45,9 +45,9 @@ p.add_argument('--counter_start', type=int, default=-1, required=False, help='De
 p.add_argument('--counter_end', type=int, default=-1, required=False, help='Defines the linear step for curriculum training starting from the initial time')
 p.add_argument('--num_src_samples', type=int, default=1000, required=False, help='Number of source samples at each time step')
 
-p.add_argument('--speed_max', type=float, default=0.5, required=False, help='upper bound for control v_x, v_y')
+p.add_argument('--speed_max', type=float, default=1, required=False, help='upper bound for control v_x, v_y')
 p.add_argument('--angle_alpha', type=float, default=1.0, required=False, help='Angle alpha coefficient.')
-p.add_argument('--collisionR', type=float, default=0.75, required=False, help='Collision radisu between vehicles')
+p.add_argument('--collisionR', type=float, default=0.5, required=False, help='Collision radisu between vehicles')
 p.add_argument('--minWith', type=str, default='target', required=False, choices=['none', 'zero', 'target'], help='BRS vs BRT computation')
 
 p.add_argument('--clip_grad', default=0.0, type=float, help='Clip gradient.')
