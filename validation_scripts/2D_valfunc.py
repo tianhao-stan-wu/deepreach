@@ -15,7 +15,7 @@ import math
 from torch.utils.data import DataLoader
 
 
-ckpt_path = './Deepreach_trained_checkpoints/hw2.pth'
+ckpt_path = './Deepreach_trained_checkpoints/hw2_unsafe.pth'
 logging_root = './logs'
 
 model = modules.SingleBVPNet(in_features=3, out_features=1, type='sine', mode='mlp',
