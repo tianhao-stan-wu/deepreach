@@ -15,7 +15,7 @@ import math
 from torch.utils.data import DataLoader
 
 
-ckpt_path = './Deepreach_trained_checkpoints/hw2_unsafe.pth'
+ckpt_path = './Deepreach_trained_checkpoints/hw2_goal.pth'
 logging_root = './logs'
 
 model = modules.SingleBVPNet(in_features=3, out_features=1, type='sine', mode='mlp',
@@ -64,4 +64,4 @@ for i in range(num_times):
   s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-2., 2., -2., 2.))
   fig.colorbar(s) 
 
-fig.savefig(os.path.join(logging_root, 'hw2_unsafe.png'))
+fig.savefig(os.path.join(logging_root, 'hw2_goal.png'))
