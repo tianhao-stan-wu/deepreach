@@ -32,7 +32,7 @@ model.eval()
 
 
 # Time values at which the function needs to be plotted
-times = [0., 0.5, 1.0]
+times = [0., 0.5]
 num_times = len(times)
 
 # Create a figure
@@ -56,12 +56,12 @@ for i in range(num_times):
   model_out = model_out.reshape((sidelen, sidelen)) 
 
   # Plot the zero level sets
-  model_out = (model_out <= 0.001)*1.
+  model_out = (model_out > 0.001)*1.
 
   # Plot the actual data
   ax = fig.add_subplot(1, num_times, 1 + i)
   ax.set_title('t = %0.2f' % times[i])
-  s = ax.imshow(model_out.T, cmap='bwr_r', origin='lower', extent=(-2., 2., -2., 2.))
+  s = ax.imshow(model_out.T, cmap='bwr', origin='lower', extent=(-2., 2., -2., 2.))
   fig.colorbar(s) 
 
 fig.savefig(os.path.join(logging_root, 'hw2_unsafe.png'))
