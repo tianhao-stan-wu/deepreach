@@ -89,6 +89,63 @@ class FCBlock(nn.Module):
         return output
 
 
+class FCBlock_exp(nn.Module):
+    '''A fully connected neural network.
+    '''
+
+    def __init__(self, in_features, out_features, num_hidden_layers, hidden_features,
+                 outermost_linear=False, nonlinearity='relu', weight_init=None):
+        super().__init__()
+
+        # Dictionary that maps nonlinearity name to the respective function, initialization, and, if applicable,
+        # special first-layer initialization scheme
+        nls_and_inits = {'sine':(Sine(), sine_init, first_layer_sine_init),
+                         'relu':(nn.ReLU(inplace=True), init_weights_normal, None),
+                         'sigmoid':(nn.Sigmoid(), init_weights_xavier, None),
+                         'tanh':(nn.Tanh(), init_weights_xavier, None),
+                         'selu':(nn.SELU(inplace=True), init_weights_selu, None),
+                         'softplus':(nn.Softplus(), init_weights_normal, None),
+                         'elu':(nn.ELU(inplace=True), init_weights_elu, None)}
+
+        sine, sine_weight_init, sine_first_layer_init = nls_and_inits['sine']
+        relu, relu_weight_init, relu_first_layer_init = nls_and_inits['relu']
+
+        self.net = []
+        self.net.append(nn.Sequential(BatchLinear(in_features, hidden_features)))
+
+        # hidden layers
+        self.net.append(nn.Sequential(
+            BatchLinear(in_features, hidden_features), sine
+        ))
+        self.net.append(nn.Sequential(BatchLinear(in_features, hidden_features)))
+        self.net.append(nn.Sequential(
+            BatchLinear(in_features, hidden_features), sine
+        ))
+        
+
+        if outermost_linear:
+            self.net.append(nn.Sequential(BatchLinear(hidden_features, out_features)))
+        else:
+            self.net.append(nn.Sequential(
+                BatchLinear(hidden_features, out_features), sine
+            ))
+
+        self.net = nn.Sequential(*self.net)
+        # self.net[0].apply()
+        self.net[1].apply(sine_weight_init)
+        # self.net[2].apply()
+        self.net[3].apply(sine_weight_init)
+        # self.net[4].apply()
+            
+
+    def forward(self, coords, params=None, **kwargs):
+        if params is None:
+            params = OrderedDict(self.named_parameters())
+
+        output = self.net(coords)
+        return output
+
+
 class SingleBVPNet(nn.Module):
     '''A canonical representation network for a BVP.'''
 
@@ -96,7 +153,7 @@ class SingleBVPNet(nn.Module):
                  mode='mlp', hidden_features=256, num_hidden_layers=3, **kwargs):
         super().__init__()
         self.mode = mode
-        self.net = FCBlock(in_features=in_features, out_features=out_features, num_hidden_layers=num_hidden_layers,
+        self.net = FCBlock_exp(in_features=in_features, out_features=out_features, num_hidden_layers=num_hidden_layers,
                            hidden_features=hidden_features, outermost_linear=True, nonlinearity=type)
         print(self)
 
