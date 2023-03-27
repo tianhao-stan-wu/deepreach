@@ -111,9 +111,6 @@ class FCBlock_exp(nn.Module):
         relu, relu_weight_init, relu_first_layer_init = nls_and_inits['relu']
 
         self.net = []
-        self.net.append(nn.Sequential(BatchLinear(in_features, hidden_features)))
-
-        # hidden layers
         self.net.append(nn.Sequential(
             BatchLinear(in_features, hidden_features), sine
         ))
@@ -121,6 +118,7 @@ class FCBlock_exp(nn.Module):
         self.net.append(nn.Sequential(
             BatchLinear(in_features, hidden_features), sine
         ))
+        self.net.append(nn.Sequential(BatchLinear(in_features, hidden_features)))
         
 
         if outermost_linear:
@@ -131,10 +129,10 @@ class FCBlock_exp(nn.Module):
             ))
 
         self.net = nn.Sequential(*self.net)
-        # self.net[0].apply()
-        self.net[1].apply(sine_weight_init)
-        # self.net[2].apply()
-        self.net[3].apply(sine_weight_init)
+        self.net[0].apply(sine_first_layer_init)
+        # self.net[1].apply(sine_weight_init)
+        self.net[2].apply(sine_weight_init)
+        # self.net[3].apply(sine_weight_init)
         # self.net[4].apply()
             
 
