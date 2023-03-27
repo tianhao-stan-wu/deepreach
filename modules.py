@@ -114,11 +114,11 @@ class FCBlock_exp(nn.Module):
         self.net.append(nn.Sequential(
             BatchLinear(in_features, hidden_features), sine
         ))
-        self.net.append(nn.Sequential(BatchLinear(in_features, hidden_features)))
+        self.net.append(nn.Sequential(BatchLinear(hidden_features, hidden_features)))
         self.net.append(nn.Sequential(
-            BatchLinear(in_features, hidden_features), sine
+            BatchLinear(hidden_features, hidden_features), sine
         ))
-        self.net.append(nn.Sequential(BatchLinear(in_features, hidden_features)))
+        self.net.append(nn.Sequential(BatchLinear(hidden_features, hidden_features)))
         
 
         if outermost_linear:
