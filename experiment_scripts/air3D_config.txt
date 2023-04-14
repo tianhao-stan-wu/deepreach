@@ -1,0 +1,12 @@
+experiment_name = "af_exp10"
+minWith = "target"
+tMax = 1.1
+velocity = 0.75
+omega_max = 3.0
+angle_alpha = 1.2
+num_src_samples = 10000
+pretrain = True
+pretrain_iters = 10000
+num_epochs = 120000
+lr = 2e-5
+counter_end = 110000

@@ -7,7 +7,7 @@ import sys
 import os
 sys.path.append( os.path.dirname( os.path.dirname( os.path.abspath(__file__) ) ) )
 
-import dataio, utils, training, loss_functions, modules, diff_operators
+import dataio, utils, training, loss_functions, modules, diff_operators, modules_dup
 
 import torch
 import numpy as np
@@ -16,12 +16,14 @@ from torch.utils.data import DataLoader
 import configargparse
 import scipy.io as spio
 
-logging_root = './logs'
+logging_root = './logs/af_exp9/plots'
+if not os.path.exists(logging_root):
+  os.makedirs(logging_root)
 angle_alpha = 1.2
 
 # Setting to plot
-ckpt_path = './Deepreach_trained_checkpoints/air3D_ckpt.pth'
-activation = 'sine'
+ckpt_path = './logs/af_exp9/checkpoints/model_final.pth'
+activation = 'relu'
 times = [0.9]
 time_indices_matlab = [int(time_to_plot/0.1) + 1 for time_to_plot in times]
 thetas = [1.5863] # This theta is contained in the LS computation grid. 

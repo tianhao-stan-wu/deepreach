@@ -97,6 +97,8 @@ class FCBlock_exp(nn.Module):
                  outermost_linear=False, nonlinearity='relu', weight_init=None):
         super().__init__()
 
+        self.first_layer_init = None
+
         # Dictionary that maps nonlinearity name to the respective function, initialization, and, if applicable,
         # special first-layer initialization scheme
         nls_and_inits = {'sine':(Sine(), sine_init, first_layer_sine_init),
@@ -107,34 +109,50 @@ class FCBlock_exp(nn.Module):
                          'softplus':(nn.Softplus(), init_weights_normal, None),
                          'elu':(nn.ELU(inplace=True), init_weights_elu, None)}
 
-        sine, sine_weight_init, sine_first_layer_init = nls_and_inits['sine']
-        relu, relu_weight_init, relu_first_layer_init = nls_and_inits['relu']
+        # nl, nl_weight_init, first_layer_init = nls_and_inits[nonlinearity]
+
+        # if weight_init is not None:  # Overwrite weight init if passed
+        #     self.weight_init = weight_init
+        # else:
+        #     self.weight_init = nl_weight_init
 
         self.net = []
         self.net.append(nn.Sequential(
-            BatchLinear(in_features, hidden_features), sine
+            BatchLinear(in_features, hidden_features), nn.ReLU(inplace=True)
         ))
-        self.net.append(nn.Sequential(BatchLinear(hidden_features, hidden_features)))
+
         self.net.append(nn.Sequential(
-            BatchLinear(hidden_features, hidden_features), sine
+            BatchLinear(hidden_features, hidden_features), nn.ReLU(inplace=True)
         ))
-        self.net.append(nn.Sequential(BatchLinear(hidden_features, hidden_features)))
-        
+        self.net.append(nn.Sequential(
+            BatchLinear(hidden_features, hidden_features), nn.ReLU(inplace=True)
+        ))
+        self.net.append(nn.Sequential(
+            BatchLinear(hidden_features, hidden_features), nn.ReLU(inplace=True)
+        ))
+
+        # for i in range(num_hidden_layers):
+        #     self.net.append(nn.Sequential(
+        #         BatchLinear(hidden_features, hidden_features), nl
+        #     ))
 
         if outermost_linear:
             self.net.append(nn.Sequential(BatchLinear(hidden_features, out_features)))
         else:
             self.net.append(nn.Sequential(
-                BatchLinear(hidden_features, out_features), sine
+                BatchLinear(hidden_features, out_features), nl
             ))
 
         self.net = nn.Sequential(*self.net)
-        self.net[0].apply(sine_first_layer_init)
-        # self.net[1].apply(sine_weight_init)
-        self.net[2].apply(sine_weight_init)
-        # self.net[3].apply(sine_weight_init)
-        # self.net[4].apply()
-            
+        # if self.weight_init is not None:
+        #     self.net.apply(self.weight_init)
+
+        # if first_layer_init is not None: # Apply special initialization to first layer, if applicable.
+        #     self.net[0].apply(first_layer_init)
+        self.net[0].apply(init_weights_normal)
+        self.net[1].apply(init_weights_normal)
+        self.net[2].apply(init_weights_normal)
+        self.net[3].apply(init_weights_normal)
 
     def forward(self, coords, params=None, **kwargs):
         if params is None:

@@ -15,8 +15,17 @@ import math
 from torch.utils.data import DataLoader
 import configargparse
 
-p = configargparse.ArgumentParser()
-p.add('-c', '--config_filepath', required=False, is_config_file=True, help='Path to config file.')
+dir_path = os.path.dirname(os.path.realpath(__file__))
+print(dir_path)
+config_file_path = [dir_path + '/air3D_config.txt']
+print(config_file_path)
+if not config_file_path:
+  print('config file path is empty. exit')
+  exit()
+
+
+p = configargparse.ArgumentParser(default_config_files = config_file_path)
+# p.add('-c', '--config_filepath', required=False, is_config_file=True, help='Path to config file.')
 
 p.add_argument('--logging_root', type=str, default='./logs', help='root for logging')
 p.add_argument('--experiment_name', type=str, required=True,
@@ -134,6 +143,7 @@ def val_fn(model, ckpt_dir, epoch):
       fig.colorbar(s) 
 
   fig.savefig(os.path.join(ckpt_dir, 'BRS_validation_plot_epoch_%04d.png' % epoch))
+  plt.close('all') 
   
 
 training.train(model=model, train_dataloader=dataloader, epochs=opt.num_epochs, lr=opt.lr,
