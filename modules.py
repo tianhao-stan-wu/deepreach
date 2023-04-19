@@ -97,7 +97,10 @@ class FCBlock_exp(nn.Module):
                  outermost_linear=False, nonlinearity='relu', weight_init=None):
         super().__init__()
 
-        self.first_layer_init = None
+        # outermost_linear is always true
+        # not using nonlinearity here, rewrite the structure manually
+        
+        # self.first_layer_init = None
 
         # Dictionary that maps nonlinearity name to the respective function, initialization, and, if applicable,
         # special first-layer initialization scheme
@@ -118,7 +121,7 @@ class FCBlock_exp(nn.Module):
 
         self.net = []
         self.net.append(nn.Sequential(
-            BatchLinear(in_features, hidden_features), nn.ReLU(inplace=True)
+            BatchLinear(in_features, hidden_features), Sine()
         ))
 
         self.net.append(nn.Sequential(
@@ -149,10 +152,12 @@ class FCBlock_exp(nn.Module):
 
         # if first_layer_init is not None: # Apply special initialization to first layer, if applicable.
         #     self.net[0].apply(first_layer_init)
-        self.net[0].apply(init_weights_normal)
+        self.net[0].apply(first_layer_sine_init)
         self.net[1].apply(init_weights_normal)
         self.net[2].apply(init_weights_normal)
         self.net[3].apply(init_weights_normal)
+        self.net[4].apply(init_weights_normal)
+
 
     def forward(self, coords, params=None, **kwargs):
         if params is None:
@@ -162,7 +167,7 @@ class FCBlock_exp(nn.Module):
         return output
 
 
-class SingleBVPNet(nn.Module):
+class SingleBVPNet_exp(nn.Module):
     '''A canonical representation network for a BVP.'''
 
     def __init__(self, out_features=1, type='sine', in_features=2,
@@ -170,6 +175,29 @@ class SingleBVPNet(nn.Module):
         super().__init__()
         self.mode = mode
         self.net = FCBlock_exp(in_features=in_features, out_features=out_features, num_hidden_layers=num_hidden_layers,
+                           hidden_features=hidden_features, outermost_linear=True, nonlinearity=type)
+        print(self)
+
+    def forward(self, model_input, params=None):
+        if params is None:
+            params = OrderedDict(self.named_parameters())
+
+        # Enables us to compute gradients w.r.t. coordinates
+        coords_org = model_input['coords'].clone().detach().requires_grad_(True)
+        coords = coords_org
+
+        output = self.net(coords)
+        return {'model_in': coords_org, 'model_out': output}
+
+
+class SingleBVPNet(nn.Module):
+    '''A canonical representation network for a BVP.'''
+
+    def __init__(self, out_features=1, type='sine', in_features=2,
+                 mode='mlp', hidden_features=256, num_hidden_layers=3, **kwargs):
+        super().__init__()
+        self.mode = mode
+        self.net = FCBlock(in_features=in_features, out_features=out_features, num_hidden_layers=num_hidden_layers,
                            hidden_features=hidden_features, outermost_linear=True, nonlinearity=type)
         print(self)
 
@@ -239,6 +267,7 @@ def init_weights_normal(m):
     if type(m) == BatchLinear or type(m) == nn.Linear:
         if hasattr(m, 'weight'):
             nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity='relu', mode='fan_in')
+            print("Applied init_weights_normal to layer", m)
 
 
 def init_weights_selu(m):
@@ -267,6 +296,7 @@ def sine_init(m):
             num_input = m.weight.size(-1)
             # See supplement Sec. 1.5 for discussion of factor 30
             m.weight.uniform_(-np.sqrt(6 / num_input) / 30, np.sqrt(6 / num_input) / 30)
+            print("Applied sine_init to layer", m)
 
 
 def first_layer_sine_init(m):
@@ -275,3 +305,4 @@ def first_layer_sine_init(m):
             num_input = m.weight.size(-1)
             # See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of factor 30
             m.weight.uniform_(-1 / num_input, 1 / num_input)
+            print("Applied first layer sine init to layer", m)

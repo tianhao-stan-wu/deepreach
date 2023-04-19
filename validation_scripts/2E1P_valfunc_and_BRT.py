@@ -22,15 +22,19 @@ def angle_normalize(x):
   return (((x + np.pi) % (2 * np.pi)) - np.pi)
 
 # Basic parameters
-logging_root = './logs'
+logging_root = './logs/mc_exp9/plots_2'
+if not os.path.exists(logging_root):
+  os.makedirs(logging_root)
 angle_alpha = 1.2
 
 # Value function level to plot
 level = 0.001 
 
 ## Setting to plot
-ckpt_path = './Deepreach_trained_checkpoints/multivehicle_collision_2E1P.pth'
+# ckpt_path = './Deepreach_trained_checkpoints/multivehicle_collision_2E1P.pth'
+ckpt_path = './logs/mc_exp9/checkpoints/model_final.pth'
 ckpt_path_1P = './Deepreach_trained_checkpoints/multivehicle_collision_1E1P.pth'
+# ckpt_path_1P = './logs/mc_exp1_1/checkpoints/model_final.pth'
 
 poss = {}
 thetas = {}
@@ -50,7 +54,7 @@ time = 1.0
 num_slices = len(poss['1E'])
 
 # Load the model
-model = modules.SingleBVPNet(in_features=10, out_features=1, type='sine', mode='mlp', final_layer_factor=1., hidden_features=512, num_hidden_layers=3)
+model = modules.SingleBVPNet_exp(in_features=10, out_features=1, type='sine', mode='mlp', final_layer_factor=1., hidden_features=512, num_hidden_layers=3)
 model.cuda()
 checkpoint = torch.load(ckpt_path)
 try:
@@ -62,7 +66,7 @@ model.eval()
 
 # Load the 2 vehicle model
 model_1P = modules.SingleBVPNet(in_features=7, out_features=1, type='sine', mode='mlp',
-                                final_layer_factor=1., hidden_features=512, num_hidden_layers=3)
+                                final_layer_factor=1., hidden_features=512, num_hidden_layers=3)                               
 model_1P.cuda()
 checkpoint = torch.load(ckpt_path_1P)
 try:
@@ -149,7 +153,8 @@ def val_fn_BRS_posspace(model, model_1P):
     s = ax.imshow(model_out.T, cmap='bwr_r', alpha=0.5, origin='lower', vmin=-1., vmax=1., extent=(-1., 1., -1., 1.))
     sV1 = ax_valfunc.imshow(valfunc.T, cmap='bwr_r', alpha=0.8, origin='lower', vmin=-0.2, vmax=0.2, extent=(-1., 1., -1., 1.))
     sV2 = ax_valfunc.contour(valfunc.T, cmap='bwr_r', alpha=0.5, origin='lower', vmin=-0.2, vmax=0.2, levels=30, extent=(-1., 1., -1., 1.))
-    plt.clabel(sV2, levels=30, colors='k')
+    # plt.clabel(sV2, levels=30, colors='k')
+    plt.clabel(sV2, colors='k')
     fig_valfunc.colorbar(sV1) 
 
     # Compute and plot pairwise collision sets

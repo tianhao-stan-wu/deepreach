@@ -16,13 +16,13 @@ from torch.utils.data import DataLoader
 import configargparse
 import scipy.io as spio
 
-logging_root = './logs/af_exp9/plots'
+logging_root = './logs/af_exp10/plots'
 if not os.path.exists(logging_root):
   os.makedirs(logging_root)
 angle_alpha = 1.2
 
 # Setting to plot
-ckpt_path = './logs/af_exp9/checkpoints/model_final.pth'
+ckpt_path = './logs/af_exp10/checkpoints/model_final.pth'
 activation = 'relu'
 times = [0.9]
 time_indices_matlab = [int(time_to_plot/0.1) + 1 for time_to_plot in times]
